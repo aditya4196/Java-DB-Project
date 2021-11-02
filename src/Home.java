@@ -1,9 +1,18 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class Home {
 
-    public static void login() {
+    public static void login() throws Exception {
+
+        DBConnector db = new DBConnector();
+
         Scanner op = new Scanner(System.in);
+
         System.out.println("Welcome to Login Screen !!!");
         System.out.print("Please enter your username : ");
         String usr = op.nextLine();
@@ -11,25 +20,26 @@ public class Home {
         System.out.print("Please enter your password");
         String pass = op.nextLine();
 
-        // Query to validate, if true, fetch the upcode
-        char upcode = 'C';
-        boolean flag = true;
-        // login query logic here
+        Connection conn = db.getConnection();
+        PreparedStatement statement;
+        try {
+            statement = conn.prepareStatement("SELECT usercode from U_Admin where username = ? and userpwd = ?");
+            statement.setString(1, usr);
+            statement.setString(2, pass);
+            ResultSet rs = statement.executeQuery();
 
-        if (!flag)
-            System.out.println("User is not logged in");
-        else {
-            switch (upcode) {
-            case 'C':
-                signup();
+            switch (rs.getString("usercode")) {
+            case "C":
+                System.out.println("Go to Customer Landing page");
                 break;
-            case 'B':
-                login();
+            case "B":
+                System.out.println("Go to Brand Landing page");
                 break;
-            default:
-                System.out.println("User is not logged in as Customer or Brand");
             }
+        } catch (NullPointerException ne) {
+            System.out.println("User is not Registered");
         }
+
     }
 
     public static void main(String[] args) throws Exception {
@@ -64,6 +74,8 @@ public class Home {
     }
 
     private static void signup() {
+
+        DBConnector db = new DBConnector();
         Scanner op = new Scanner(System.in);
         System.out.println("Welcome to SignUp Screen !!!");
         System.out.print("Define a username for yourself: ");
