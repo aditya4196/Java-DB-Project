@@ -1,8 +1,12 @@
+import java.sql.Connection;
 import java.util.Scanner;
 
 public class Home {
 
     public static void main(String[] args) throws Exception {
+        DBConnector db = new DBConnector();
+        Connection con = db.createConnection();
+        db.close(con);
         Scanner op = new Scanner(System.in);
         System.out.println("Welcome to the MarketPlace !!!");
 
