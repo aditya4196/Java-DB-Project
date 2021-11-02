@@ -1,34 +1,24 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Statement;
+import java.sql.SQLException;
 
 public class DBConnector {
+    static final String jdbcURL = "jdbc:oracle:thin:@ora.csc.ncsu.edu:1521:orcl01";
 
-    public void Connection(String url, String user, String pass) {
-        Connection con = null;
+    public void Connection(String jdbcURL, String user, String pass) {
 
         // Try block to check for exceptions
         try {
 
-            // Registering drivers
-            DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
+            Class.forName("oracle.jdbc.OracleDriver");
+
+            user = "cpsmith6";
+            pass = "abcd1234";
+
+            Connection con = null;
 
             // Reference to connection interface
-            con = DriverManager.getConnection(url, user, pass);
-
-            // Creating a statement
-            Statement st = con.createStatement();
-
-            
-            // Executing querry
-            int m = st.executeUpdate(sql);
-            if (m == 1)
-                System.out.println("inserted successfully : " + sql);
-            else
-                System.out.println("insertion failed");
-
-            // Closing the connections
-            con.close();
+            con = DriverManager.getConnection(jdbcURL, user, pass);
         }
 
         // Catch block to handle exceptions
@@ -36,5 +26,9 @@ public class DBConnector {
             // Display message when exceptions occurs
             System.err.println(ex);
         }
+    }
+
+    public void close(Connection con) throws SQLException {
+        con.close();
     }
 }
