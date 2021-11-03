@@ -3,32 +3,28 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnector {
-    static final String jdbcURL = "jdbc:oracle:thin:@ora.csc.ncsu.edu:1521:orcl01";
 
-    public void Connection(String jdbcURL, String user, String pass) {
+    public Connection getConnection() throws Exception {
 
-        // Try block to check for exceptions
+        Connection conn = null;
         try {
 
             Class.forName("oracle.jdbc.OracleDriver");
+            String jdbcUrl = "jdbc:oracle:thin:@ora.csc.ncsu.edu:1521:orcl01";
+            String user = "cpsmith6";
+            String passwd = "abcd1234";
 
-            user = "cpsmith6";
-            pass = "abcd1234";
+            conn = DriverManager.getConnection(jdbcUrl, user, passwd);
+            System.out.println("Connected to Database");
 
-            Connection con = null;
-
-            // Reference to connection interface
-            con = DriverManager.getConnection(jdbcURL, user, pass);
+        } catch (SQLException se) {
+            se.printStackTrace();
         }
 
-        // Catch block to handle exceptions
-        catch (Exception ex) {
-            // Display message when exceptions occurs
-            System.err.println(ex);
-        }
+        return conn;
     }
 
-    public void close(Connection con) throws SQLException {
-        con.close();
+    public void close(Connection conn) throws SQLException {
+        conn.close();
     }
 }
