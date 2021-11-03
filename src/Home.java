@@ -1,11 +1,14 @@
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class Home {
-
     public static void main(String[] args) throws Exception {
         DBConnector db = new DBConnector();
-        Connection con = db.createConnection();
+        Connection con = db.getConnection();
         db.close(con);
         Scanner op = new Scanner(System.in);
         System.out.println("Welcome to the MarketPlace !!!");
@@ -17,7 +20,6 @@ public class Home {
         System.out.print("Your Option : ");
 
         int option = op.nextInt();
-        op.close();
 
         switch (option) {
         case 1:
@@ -34,6 +36,7 @@ public class Home {
             main(args);
         }
 
+        op.close();
     }
 
     private static void showQueries() {
@@ -41,6 +44,10 @@ public class Home {
     }
 
     private static void signup() throws Exception {
+
+        DBConnector db = new DBConnector();
+        Connection con = db.getConnection();
+        db.close(con);
         Scanner op = new Scanner(System.in);
         System.out.println("Welcome to SignUp Screen !!!");
         System.out.print("Define a username for yourself: ");
@@ -56,7 +63,6 @@ public class Home {
         System.out.print("Your Option : ");
 
         int userop = op.nextInt();
-        op.close();
 
         switch (userop) {
         case 1:
@@ -67,11 +73,12 @@ public class Home {
             break;
         case 3:
             main(null);
-            // goto statement
             break;
         default:
             System.out.println("You chose an invalid option");
         }
+
+        op.close();
     }
 
     private static void customerSignup() {
@@ -85,36 +92,44 @@ public class Home {
     }
 
     public static void login() throws Exception {
+
+        DBConnector db = new DBConnector();
+
         Scanner op = new Scanner(System.in);
+
         System.out.println("Welcome to Login Screen !!!");
         System.out.print("Please enter your username : ");
         String usr = op.nextLine();
         System.out.println();
-        System.out.print("Please enter your password");
-
+        System.out.print("Please enter your password : ");
         String pass = op.nextLine();
-        op.close();
 
-        // Query to validate, if true, fetch the upcode
-        char upcode = 'C';
-        boolean flag = true;
-        // login query logic here
+        Connection conn = db.getConnection();
+        PreparedStatement statement;
+        try {
+            statement = conn.prepareStatement("SELECT usercode from U_Admin where username = ? and userpwd = ?");
+            statement.setString(1, usr);
+            statement.setString(2, pass);
+            ResultSet rs = statement.executeQuery();
+            rs.next();
+            String usercode = rs.getString("usercode");
 
-        if (!flag)
-            System.out.println("User is not logged in");
-        else {
-            switch (upcode) {
-            case 'C':
-                customerLanding();
-                break;
-            case 'B':
-                brandLanding();
-                break;
-            case 'A':
+            switch (usercode) {
+            case "A":
                 adminLanding();
                 break;
+            case "B":
+                brandLanding();
+                break;
+            case "C":
+                customerLanding();
+                break;
             }
+        } catch (NullPointerException ne) {
+            System.out.println("User is not Registered");
         }
+
+        op.close();
     }
 
     private static void logout() {
@@ -127,7 +142,6 @@ public class Home {
         System.out.print("Your Option : ");
 
         int userop = op.nextInt();
-        op.close();
 
         switch (userop) {
         case 1:
@@ -140,10 +154,13 @@ public class Home {
             System.out.println("You have entered an invlaid option");
             customerLanding();
         }
+
+        op.close();
     }
 
     private static void brandLanding() throws Exception {
         Scanner op = new Scanner(System.in);
+        Brand bd = new Brand();
         System.out.println("1. Add Loyalty Program");
         System.out.println("2. Add RE Rules");
         System.out.println("3. Update RE Rules");
@@ -154,26 +171,25 @@ public class Home {
         System.out.print("Your Option : ");
 
         int userop = op.nextInt();
-        op.close();
 
         switch (userop) {
         case 1:
-            Brand.addLoyaltyProgram();
+            bd.addLoyaltyProgram();
             break;
         case 2:
-            Brand.addRERules();
+            bd.addRERules();
             break;
         case 3:
-            Brand.updateRERules();
+            bd.updateRERules();
             break;
         case 4:
-            Brand.addRRRules();
+            bd.addRRRules();
             break;
         case 5:
-            Brand.updateRRRules();
+            bd.updateRRRules();
             break;
         case 6:
-            Brand.validateLoyaltyProgram();
+            bd.validateLoyaltyProgram();
             break;
         case 7:
             logout();
@@ -182,6 +198,8 @@ public class Home {
             System.out.println("You have entered an invlaid option");
             brandLanding();
         }
+
+        op.close();
     }
 
     private static void adminLanding() {
@@ -196,7 +214,6 @@ public class Home {
         System.out.print("Your Option : ");
 
         int userop = op.nextInt();
-        op.close();
 
         switch (userop) {
         case 1:
@@ -221,8 +238,10 @@ public class Home {
             logout();
             break;
         default:
-            System.out.println("You have entered an invlaid option");
+            System.out.println("You have entered an invalid option");
             adminLanding();
         }
+
+        op.close();
     }
 }
