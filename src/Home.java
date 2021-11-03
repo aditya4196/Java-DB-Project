@@ -17,7 +17,7 @@ public class Home {
         System.out.print("Please enter your username : ");
         String usr = op.nextLine();
         System.out.println();
-        System.out.print("Please enter your password");
+        System.out.print("Please enter your password : ");
         String pass = op.nextLine();
 
         Connection conn = db.getConnection();
@@ -27,9 +27,13 @@ public class Home {
             statement.setString(1, usr);
             statement.setString(2, pass);
             ResultSet rs = statement.executeQuery();
-
-            switch (rs.getString("usercode")) {
-            case "C":
+            rs.next();
+            String usercode = rs.getString("usercode");
+            
+            switch (usercode) {
+            case "A":
+                System.out.println("Go to Admin Landing Page");
+            case "C": 
                 System.out.println("Go to Customer Landing page");
                 break;
             case "B":
@@ -116,5 +120,112 @@ public class Home {
     private static void brandEntry() {
         System.out.println("Welcome to Brand Signup");
         // Ask for brand details and insert
+    }
+
+    private static void logout() {
+    }
+
+    private static void customerLanding() throws Exception {
+        Scanner op = new Scanner(System.in);
+        System.out.println("1. Enroll in Loyalty Program");
+        System.out.println("2. Go Back");
+        System.out.print("Your Option : ");
+
+        int userop = op.nextInt();
+
+        switch (userop) {
+        case 1:
+            Customer.enrollInLP();
+            break;
+        case 2:
+            main(null);
+            break;
+        default:
+            System.out.println("You have entered an invlaid option");
+            customerLanding();
+        }
+    }
+
+    private static void brandLanding() throws Exception {
+        Scanner op = new Scanner(System.in);
+        Brand bd = new Brand();
+        System.out.println("1. Add Loyalty Program");
+        System.out.println("2. Add RE Rules");
+        System.out.println("3. Update RE Rules");
+        System.out.println("4. Add RR Rules");
+        System.out.println("5. Update RR Rules");
+        System.out.println("6. Validate Loyalty Program");
+        System.out.println("7. Logout");
+        System.out.print("Your Option : ");
+
+        int userop = op.nextInt();
+
+        switch (userop) {
+        case 1:
+            bd.addLoyaltyProgram();
+            break;
+        case 2:
+            bd.addRERules();
+            break;
+        case 3:
+            bd.updateRERules();
+            break;
+        case 4:
+            bd.addRRRules();
+            break;
+        case 5:
+            bd.updateRRRules();
+            break;
+        case 6:
+            bd.validateLoyaltyProgram();
+            break;
+        case 7:
+            logout();
+            break;
+        default:
+            System.out.println("You have entered an invlaid option");
+            brandLanding();
+        }
+    }
+
+    private static void adminLanding() {
+        Scanner op = new Scanner(System.in);
+        System.out.println("1. Add Brand");
+        System.out.println("2. Add Customer");
+        System.out.println("3. Show Brand's Info");
+        System.out.println("4. Show Customer's Info");
+        System.out.println("5. Add Activity Type");
+        System.out.println("6. Add Reward Type");
+        System.out.println("7. Logout");
+        System.out.print("Your Option : ");
+
+        int userop = op.nextInt();
+
+        switch (userop) {
+        case 1:
+            Admin.addBrand();
+            break;
+        case 2:
+            Admin.addCustomer();
+            break;
+        case 3:
+            Admin.showBrandInfo();
+            break;
+        case 4:
+            Admin.showCustomerInfo();
+            break;
+        case 5:
+            Admin.addActivityType();
+            break;
+        case 6:
+            Admin.addRewardType();
+            break;
+        case 7:
+            logout();
+            break;
+        default:
+            System.out.println("You have entered an invalid option");
+            adminLanding();
+        }
     }
 }
