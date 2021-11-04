@@ -122,7 +122,7 @@ public class Brand {
     public void updateRERules() throws Exception {
     	Scanner op = new Scanner(System.in);
 		RERules re = new RERules();
-    	System.out.println("1. Add RE Rules");
+    	System.out.println("1. Update RE Rules");
     	System.out.println("2. Go Back");
     	System.out.print("Your option: ");
     	

@@ -4,7 +4,8 @@ import java.sql.ResultSet;
 import java.util.Scanner;
 
 public class Home {
-    public void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
+    	Home home = new Home();
         DBConnector db = new DBConnector();
         Connection con = db.getConnection();
         db.close(con);
@@ -12,22 +13,22 @@ public class Home {
         System.out.println("Welcome to the MarketPlace !!!");
 
         System.out.println("Please choose from the below options");
-        System.out.println("1. SignUp");
+        System.out.println("1. Sign up");
         System.out.println("2. Login");
-        System.out.println("3. ShowQueries");
+        System.out.println("3. Show Queries");
         System.out.print("Your Option : ");
 
         int option = op.nextInt();
 
         switch (option) {
         case 1:
-            signup();
+            home.signup();
             break;
         case 2:
-            login();
+            home.login();
             break;
         case 3:
-            showQueries();
+        	home.showQueries();
             break;
         default:
             System.out.println("Chose an invalid option");
@@ -130,14 +131,15 @@ public class Home {
         op.close();
     }
 
-    public void logout() {
+    public void logout() throws Exception {
+    	main(null);
     }
 
     public void customerLanding() throws Exception {
         Scanner op = new Scanner(System.in);
         Customer cstmr = new Customer();
         System.out.println("1. Enroll in Loyalty Program");
-        System.out.println("2. Go Back");
+        System.out.println("2. Logout");
         System.out.print("Your Option : ");
 
         int userop = op.nextInt();
@@ -147,7 +149,7 @@ public class Home {
             cstmr.enrollInLP();
             break;
         case 2:
-            main(null);
+            logout();
             break;
         default:
             System.out.println("You have entered an invlaid option");
@@ -201,7 +203,7 @@ public class Home {
         op.close();
     }
 
-    public void adminLanding() {
+    public void adminLanding() throws Exception {
         Scanner op = new Scanner(System.in);
         Admin ad = new Admin();
         System.out.println("1. Add Brand");
