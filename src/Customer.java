@@ -1,4 +1,4 @@
 public class Customer {
-    public static void enrollInLP() {
+    public void enrollInLP() {
     }
 }
