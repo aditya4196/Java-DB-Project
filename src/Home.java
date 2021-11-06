@@ -5,11 +5,15 @@ import java.util.Scanner;
 
 public class Home {
     public static void main(String[] args) throws Exception {
+
         Home home = new Home();
         DBConnector db = new DBConnector();
         Connection con = db.getConnection();
         db.close(con);
         Scanner op = new Scanner(System.in);
+
+        Admin.adminLanding();
+        
         System.out.println("Welcome to the MarketPlace !!!");
 
         System.out.println("Please choose from the below options");
@@ -20,6 +24,8 @@ public class Home {
 
         int option = op.nextInt();
 
+        //Admin.adminLanding();
+        
         switch (option) {
         case 1:
             home.signup();

@@ -1,13 +1,14 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.ResultSetMetaData;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Admin {
 
-
+    
     public static void adminLanding() throws Exception {
 
         Scanner op = new Scanner(System.in);
@@ -59,7 +60,7 @@ public class Admin {
 
     public static void addRewardTypePage() throws Exception {
 
-        Scanner op = new Scanner(System.in);
+        Scanner op1 = new Scanner(System.in);
         System.out.println("Welcome to Add Customer Screen !!!");
 
         System.out.println("Please choose from below, to which category you belong");
@@ -67,7 +68,7 @@ public class Admin {
         System.out.println("2.Go Back");
         System.out.print("Your Option : ");
 
-        int userop = op.nextInt();
+        int userop = op1.nextInt();
 
         switch (userop) {
         case 1:
@@ -80,7 +81,7 @@ public class Admin {
             System.out.println("You chose an invalid option");
         }
 
-        op.close();
+        op1.close();
 
     }
 
@@ -88,29 +89,49 @@ public class Admin {
 
         DBConnector db = new DBConnector();
         Connection con = db.getConnection();
-        db.close(con);
-        Scanner op = new Scanner(System.in);
+        Scanner op1 = new Scanner(System.in);
+        
+        System.out.println("Please enter the Reward Type ID : ");
+        String rewId = op1.nextLine();
         
         System.out.println("Please enter the Reward Type Name : ");
-        String rewardTypeName = op.nextLine();
-        System.out.println("Please enter the Reward Type Description : ");
-        String rewardTypeDescription = op.nextLine();
+        String rewardTypeName = op1.nextLine();
+        
+        System.out.println("Please enter the Reward Type Expiry Date : ");
+        
+        SimpleDateFormat dateInput = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = op1.nextLine();
 
-        String sql = "INSERT INTO reward_type (reward_type_name, reward_type_description) VALUES (?,?)";
+        Date rewExpdate = dateInput.parse(strDate);
+        System.out.println(rewExpdate);
+        System.out.println(rewExpdate.getTime());
+        System.out.println(new java.sql.Date(rewExpdate.getTime()));
+        
+        try {
+        String sql = "INSERT INTO REWARDTYPE (rewId, rewname, expirydate) VALUES (?,?,?)";
         PreparedStatement pstmt = con.prepareStatement(sql);
-        pstmt.setString(1, rewardTypeName);
-        pstmt.setString(2, rewardTypeDescription);
+        pstmt.setInt(1, Integer.valueOf(rewId));
+        pstmt.setString(2, rewardTypeName);
+        pstmt.setDate(3, new java.sql.Date(rewExpdate.getTime()));
         pstmt.executeUpdate();
 
         System.out.println("Reward Type Added Successfully");
+        System.out.println(" ");
         Admin.adminLanding();
-        op.close();
-
+        db.close(con);
+        
+        }
+        
+        catch (Exception e) {
+            System.out.println("Customer ID not found");
+            Admin.adminLanding();
+        }
+        
     }
 
     public static void addActivityTypePage() throws Exception {
         
-        Scanner op = new Scanner(System.in);
+        Scanner op1 = new Scanner(System.in);
         System.out.println("Welcome to Add Customer Screen !!!");
 
         System.out.println("Please choose from below, to which category you belong");
@@ -118,7 +139,7 @@ public class Admin {
         System.out.println("2.Go Back");
         System.out.print("Your Option : ");
 
-        int userop = op.nextInt();
+        int userop = op1.nextInt();
 
         switch (userop) {
         case 1:
@@ -131,7 +152,7 @@ public class Admin {
             System.out.println("You chose an invalid option");
         }
 
-        op.close();
+        op1.close();
 
     }
 
@@ -139,29 +160,45 @@ public class Admin {
 
         DBConnector db = new DBConnector();
         Connection con = db.getConnection();
-        db.close(con);
-        Scanner op = new Scanner(System.in);
+        
+        Scanner op1 = new Scanner(System.in);
+        
+        System.out.println("Please enter the Activity Type ID : ");
+        String actId = op1.nextLine();
+        
+        System.out.println("Please enter the Activity Type Code : ");
+        String actCode = op1.nextLine();
         
         System.out.println("Please enter the Activity Type Name : ");
-        String activityTypeName = op.nextLine();
-        System.out.println("Please enter the Activity Type Description : ");
-        String activityTypeDescription = op.nextLine();
+        String activityTypeName = op1.nextLine();
+        
+        try {
 
-        String sql = "INSERT INTO activity_type (activity_type_name, activity_type_description) VALUES (?,?)";
+        String sql = "INSERT INTO ACTIVITYTYPE (actid, actcode, actname, actdate) VALUES (?,?,?,(SELECT SYSDATE FROM DUAL))";
         PreparedStatement pstmt = con.prepareStatement(sql);
-        pstmt.setString(1, activityTypeName);
-        pstmt.setString(2, activityTypeDescription);
+        pstmt.setString(1, actId);
+        pstmt.setString(2, actCode);
+        pstmt.setString(3, activityTypeName);
         pstmt.executeUpdate();
 
         System.out.println("Activity Type Added Successfully");
+        System.out.println(" ");
         Admin.adminLanding();
-        op.close();
+        //op1.close();
+        db.close(con);
+        
+        }
+        catch (Exception e) {
+            System.out.println("Customer ID not found");
+            Admin.adminLanding();
+        }
+        
 
     }
 
     public static void showCustomerInfoPage() throws Exception {
 
-        Scanner op = new Scanner(System.in);
+        Scanner op1 = new Scanner(System.in);
         System.out.println("Welcome to Add Customer Screen !!!");
 
         System.out.println("Please choose from below, to which category you belong");
@@ -169,7 +206,7 @@ public class Admin {
         System.out.println("2.Go Back");
         System.out.print("Your Option : ");
 
-        int userop = op.nextInt();
+        int userop = op1.nextInt();
 
         switch (userop) {
         case 1:
@@ -182,33 +219,46 @@ public class Admin {
             System.out.println("You chose an invalid option");
         }
 
-        op.close();
+        op1.close();
     }
 
     public  static  void showCustomerInfo() throws Exception {
 
         DBConnector db = new DBConnector();
         Connection con = db.getConnection();
-        db.close(con);
-        Scanner op = new Scanner(System.in);
+        Scanner op1 = new Scanner(System.in);
         
-        System.out.println("Please enter the Customer ID : ");
-        String customerID = op.nextLine();
+        System.out.println("Please enter the Customer Name : ");
+        String customerName = op1.nextLine();
         Connection conn = db.getConnection();
         PreparedStatement statement;
         
         try 
         {
-            statement = conn.prepareStatement("SELECT CustomerID from Customer where CustomerID = ?");
-            statement.setString(1, customerID);
+            statement = conn.prepareStatement("SELECT cname, phoneno, caddr from Customer where cname = ?");
+            statement.setString(1, customerName);
             
             ResultSet rs = statement.executeQuery();
-            rs.next();
-            String usercode = rs.getString("usercode");
             
-            op.close();
+            ResultSetMetaData rsmd = rs.getMetaData();
+            
+            int columnsNumber = rsmd.getColumnCount();
+            
+            while (rs.next()) {
+                for (int i = 1; i <= columnsNumber; i++) {
+                    if (i > 1) System.out.print(",  ");
+                    String columnValue = rs.getString(i);
+                    System.out.print( rsmd.getColumnName(i)  + "--" + columnValue);
+                }
+                System.out.println("");
+            }
+            
+            //op1.close();
+            System.out.println(" ");
+            db.close(con);
             Admin.adminLanding();
         } 
+        
         catch (Exception e) {
             System.out.println("Customer ID not found");
             Admin.adminLanding();
@@ -221,7 +271,7 @@ public class Admin {
         DBConnector db = new DBConnector();
         Connection con = db.getConnection();
         db.close(con);
-        Scanner op = new Scanner(System.in);
+        Scanner op1 = new Scanner(System.in);
         System.out.println("Welcome to Add Customer Screen !!!");
 
         System.out.println("Please choose from below, to which category you belong");
@@ -229,8 +279,8 @@ public class Admin {
         System.out.println("2.Go Back");
         System.out.print("Your Option : ");
 
-        int userop = op.nextInt();
-
+        int userop = op1.nextInt();
+        
         switch (userop) {
         case 1:
             showBrandInfo();
@@ -242,7 +292,8 @@ public class Admin {
             System.out.println("You chose an invalid option");
         }
 
-        op.close();
+        System.out.println(" ");
+        op1.close();
 
     }
 
@@ -250,26 +301,39 @@ public class Admin {
         
         DBConnector db = new DBConnector();
         Connection con = db.getConnection();
-        db.close(con);
-        Scanner op = new Scanner(System.in);
+        Scanner op1 = new Scanner(System.in);
         
-        System.out.println("Please enter the Brand ID : ");
-        String brandID = op.nextLine();
+        System.out.println("Please enter the Brand Name : ");
+        String brandName = op1.nextLine();
         Connection conn = db.getConnection();
         PreparedStatement statement;
         
         try 
         {
-            statement = conn.prepareStatement("SELECT brandID from Brand where brandID = ?");
-            statement.setString(1, brandID);
+            statement = conn.prepareStatement("SELECT bname, baddr, bjoindate from brand where bname = ?");
+            statement.setString(1, brandName);
             
             ResultSet rs = statement.executeQuery();
-            rs.next();
-            String usercode = rs.getString("usercode");
             
-            op.close();
-            Admin.adminLanding();
+            ResultSetMetaData rsmd = rs.getMetaData();
+            
+            int columnsNumber = rsmd.getColumnCount();
+            while (rs.next()) {
+                for (int i = 1; i <= columnsNumber; i++) {
+                    if (i > 1) System.out.print(",  ");
+                    String columnValue = rs.getString(i);
+                    System.out.print(rsmd.getColumnName(i)  + "--" +  columnValue);
+                }
+                System.out.println("");
+            }
+            
+            //op1.close();
+            db.close(con);
+            System.out.println(" ");
+            Admin.adminLanding();         
+            
         } 
+        
         catch (Exception e) {
             System.out.println("Brand ID not found");
             Admin.adminLanding();
@@ -281,7 +345,7 @@ public class Admin {
         DBConnector db = new DBConnector();
         Connection con = db.getConnection();
         db.close(con);
-        Scanner op = new Scanner(System.in);
+        Scanner op1 = new Scanner(System.in);
         System.out.println("Welcome to Add Customer Screen !!!");
 
         System.out.println("Please choose from below, to which category you belong");
@@ -289,7 +353,7 @@ public class Admin {
         System.out.println("2.Go Back");
         System.out.print("Your Option : ");
 
-        int userop = op.nextInt();
+        int userop = op1.nextInt();
 
         switch (userop) {
         case 1:
@@ -302,7 +366,7 @@ public class Admin {
             System.out.println("You chose an invalid option");
         }
 
-        op.close();
+        op1.close();
 
     }
 
@@ -310,32 +374,63 @@ public class Admin {
             
         DBConnector db = new DBConnector();
         Connection con = db.getConnection();
-        db.close(con);
-        Scanner op = new Scanner(System.in);
+        //db.close(con);
+        Scanner op1 = new Scanner(System.in);
 
-        System.out.println("Please enter the Customer Name : ");
-        String customerName = op.nextLine();
-        System.out.println("Please enter the Customer Address : ");
-        String customerAddress = op.nextLine();
-        System.out.println("Please enter the Customer Phone Number : ");
-        String customerPhoneNumber = op.nextLine();
-        System.out.println("Please enter the Customer Email : ");
-        String customerEmail = op.nextLine();
-        System.out.println("Please enter the Customer Password : ");
-        String customerPassword = op.nextLine();
-
-        String sql = "INSERT INTO customer (customer_name, customer_address, customer_phone_number, customer_email, customer_password) VALUES (?,?,?,?,?)";
+        System.out.println("Please enter the Customer ID : ");
+        String custId = op1.nextLine();
+        System.out.println("Please enter the Cutomer Name : ");
+        String custName = op1.nextLine();
+        System.out.println("Please enter the Cutomer Password : ");
+        String custPassword = op1.nextLine();
+        System.out.println("Please enter the Cutomer Address : ");
+        String customerAddress = op1.nextLine();
+        System.out.println("Please enter the Cutomer Phone Number : ");
+        String customerPhone = op1.nextLine();
+        
+        String sql = "INSERT INTO U_ADMIN (userid, username, usercode, userpwd) VALUES (?,?,?,?)";
         PreparedStatement pstmt = con.prepareStatement(sql);
-        pstmt.setString(1, customerName);
-        pstmt.setString(2, customerAddress);
-        pstmt.setString(3, customerPhoneNumber);
-        pstmt.setString(4, customerEmail);
-        pstmt.setString(5, customerPassword);
+        pstmt.setInt(1, Integer.valueOf(custId));
+        pstmt.setString(2, custName);
+        pstmt.setString(3, "C");
+        pstmt.setString(4, custPassword);
         pstmt.executeUpdate();
+        
+        PreparedStatement statement;
+        try {
+	        statement = con.prepareStatement("SELECT userid from U_ADMIN where username = ?");
+	        statement.setString(1, custName);
+	        
+	        ResultSet rs = statement.executeQuery();
+	        rs.next();
+	        Integer userid = rs.getInt("userid");
+	        
+	        //Admin.adminLanding();
+	        System.out.println(userid);
+	      
+	        Integer id = 4000;
+	        String sql1 = "INSERT INTO CUSTOMER (cid, cname, phoneno, caddr, userid) VALUES (?,?,?,?,?)";
+	        PreparedStatement pstmt1 = con.prepareStatement(sql1);
+	        pstmt1.setInt(1, id++);
+	        pstmt1.setString(2, custName);
+	        pstmt1.setString(3, customerPhone);
+	        pstmt1.setString(4, customerAddress);
+	        pstmt1.setInt(5, userid);
+	        
+	        pstmt1.executeUpdate();
+	
+	        System.out.println("Customer Added Successfully");
+	        Admin.adminLanding();
+	        op1.close();
+	        System.out.println(" ");
+	        db.close(con);
+        
+        } 
+        catch (Exception e) {
+            System.out.println("Customer ID not found");
+            Admin.adminLanding();
+        }
 
-        System.out.println("Customer Added Successfully");
-        Admin.adminLanding();
-        op.close();
 
     }
 
@@ -344,7 +439,7 @@ public class Admin {
         DBConnector db = new DBConnector();
         Connection con = db.getConnection();
         db.close(con);
-        Scanner op = new Scanner(System.in);
+        Scanner op1 = new Scanner(System.in);
         System.out.println("Welcome to Add Brand Screen !!!");
 
         System.out.println("Please choose from below, to which category you belong");
@@ -352,7 +447,7 @@ public class Admin {
         System.out.println("2.Go Back");
         System.out.print("Your Option : ");
 
-        int userop = op.nextInt();
+        int userop = op1.nextInt();
 
         switch (userop) {
         case 1:
@@ -365,41 +460,71 @@ public class Admin {
             System.out.println("You chose an invalid option");
         }
 
-        op.close();
+        op1.close();
 
     }
 
     public static void addBrand() throws Exception { 
+    	
                    
         DBConnector db = new DBConnector();
         Connection con = db.getConnection();
-        db.close(con);
-        Scanner op = new Scanner(System.in);
-
+        System.out.println(con.prepareStatement("SELECT SYSDATE FROM DUAL").executeQuery());
+        
+        
+        Scanner op1 = new Scanner(System.in);
+        
+        System.out.println("Please enter the Brand ID : ");
+        String brandId = op1.nextLine();
         System.out.println("Please enter the Brand Name : ");
-        String brandName = op.nextLine();
-        System.out.println("Please enter the Brand Address : ");
-        String brandAddress = op.nextLine();
-        System.out.println("Please enter the Brand Phone Number : ");
-        String brandPhoneNumber = op.nextLine();
-        System.out.println("Please enter the Brand Email : ");
-        String brandEmail = op.nextLine();
+        String brandName = op1.nextLine();
         System.out.println("Please enter the Brand Password : ");
-        String brandPassword = op.nextLine();
-
-        String sql = "INSERT INTO brand (brand_name, brand_address, brand_phone_number, brand_email, brand_password) VALUES (?,?,?,?,?)";
+        String brandPassword = op1.nextLine();
+        System.out.println("Please enter the Brand Address : ");
+        String brandAddress = op1.nextLine();
+        
+        String sql = "INSERT INTO U_ADMIN (userid, username, usercode, userpwd) VALUES (?,?,?,?)";
         PreparedStatement pstmt = con.prepareStatement(sql);
-        pstmt.setString(1, brandName);
-        pstmt.setString(2, brandAddress);
-        pstmt.setString(3, brandPhoneNumber);
-        pstmt.setString(4, brandEmail);
-        pstmt.setString(5, brandPassword);
+        pstmt.setInt(1, Integer.valueOf(brandId));
+        pstmt.setString(2, brandName);
+        pstmt.setString(3, "B");
+        pstmt.setString(4, brandPassword);
         pstmt.executeUpdate();
+        
+        PreparedStatement statement;
+        try {
+            statement = con.prepareStatement("SELECT userid from U_ADMIN where username = ?");
+            statement.setString(1, brandName);
+            
+            ResultSet rs = statement.executeQuery();
+            rs.next();
+            Integer userid = rs.getInt("userid");
+            
+            //Admin.adminLanding();
+            System.out.println(userid);
+      
+        Integer id = 2000;
+        String sql1 = "INSERT INTO BRAND (bid, bname, baddr, bjoindate, userid) VALUES (?,?,?,(SELECT SYSDATE FROM DUAL),?)";
+        PreparedStatement pstmt1 = con.prepareStatement(sql1);
+        pstmt1.setInt(1, id++);
+        pstmt1.setString(2, brandName);
+        pstmt1.setString(3, brandAddress);
+        //pstmt1.setDate(4, con.prepareStatement("SELECT SYSDATE FROM DUAL").executeQuery().getDate(0));
+        pstmt1.setInt(4, userid);
+        
+        pstmt1.executeUpdate();
 
         System.out.println("Brand Added Successfully");
+        System.out.println(" ");
         Admin.adminLanding();
-        op.close();
-
+        op1.close();
+        db.close(con);
+        
+        } 
+        catch (Exception e) {
+           System.out.println("Brand ID not found");
+           Admin.adminLanding();
+       }
     }
 
 }
