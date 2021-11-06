@@ -1,19 +1,19 @@
 public class Admin {
-    public static void addRewardType() {
+    public void addRewardType() {
     }
 
-    public static void addActivityType() {
+    public void addActivityType() {
     }
 
-    public static void showCustomerInfo() {
+    public void showCustomerInfo() {
     }
 
-    public static void showBrandInfo() {
+    public void showBrandInfo() {
     }
 
-    public static void addCustomer() {
+    public void addCustomer() {
     }
 
-    public static void addBrand() {
+    public void addBrand() {
     }
 }
