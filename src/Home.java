@@ -116,7 +116,7 @@ public class Home {
 
             switch (usercode) {
             case "A":
-                adminLanding();
+                Admin.adminLanding();
                 break;
             case "B":
                 brandLanding();
@@ -202,7 +202,7 @@ public class Home {
         op.close();
     }
 
-    private static void adminLanding() {
+    /*private static void adminLanding() {
         Scanner op = new Scanner(System.in);
         System.out.println("1. Add Brand");
         System.out.println("2. Add Customer");
@@ -243,5 +243,5 @@ public class Home {
         }
 
         op.close();
-    }
+    }*/
 }
