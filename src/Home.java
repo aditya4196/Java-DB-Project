@@ -1,12 +1,11 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Scanner;
 
 public class Home {
     public static void main(String[] args) throws Exception {
+        Home home = new Home();
         DBConnector db = new DBConnector();
         Connection con = db.getConnection();
         db.close(con);
@@ -14,22 +13,22 @@ public class Home {
         System.out.println("Welcome to the MarketPlace !!!");
 
         System.out.println("Please choose from the below options");
-        System.out.println("1. SignUp");
+        System.out.println("1. Sign up");
         System.out.println("2. Login");
-        System.out.println("3. ShowQueries");
+        System.out.println("3. Show Queries");
         System.out.print("Your Option : ");
 
         int option = op.nextInt();
 
         switch (option) {
         case 1:
-            signup();
+            home.signup();
             break;
         case 2:
-            login();
+            home.login();
             break;
         case 3:
-            showQueries();
+            home.showQueries();
             break;
         default:
             System.out.println("Chose an invalid option");
@@ -39,11 +38,11 @@ public class Home {
         op.close();
     }
 
-    private static void showQueries() {
+    public void showQueries() {
         // logic to see all queries
     }
 
-    private static void signup() throws Exception {
+    public void signup() throws Exception {
 
         DBConnector db = new DBConnector();
         Connection con = db.getConnection();
@@ -81,17 +80,17 @@ public class Home {
         op.close();
     }
 
-    private static void customerSignup() {
+    public void customerSignup() {
         System.out.println("Welcome to Customer Signup");
         // Ask for customer details and insert
     }
 
-    private static void brandSignup() {
+    public void brandSignup() {
         System.out.println("Welcome to Brand Signup");
         // Ask for brand details and insert
     }
 
-    public static void login() throws Exception {
+    public void login() throws Exception {
 
         DBConnector db = new DBConnector();
 
@@ -122,7 +121,7 @@ public class Home {
                 brandLanding();
                 break;
             case "C":
-                customerLanding();
+                customerLanding(usr);
                 break;
             }
         } catch (NullPointerException ne) {
@@ -132,33 +131,35 @@ public class Home {
         op.close();
     }
 
-    private static void logout() {
+    public void logout() throws Exception {
+        main(null);
     }
 
-    private static void customerLanding() throws Exception {
+    public void customerLanding(String custid) throws Exception {
         Scanner op = new Scanner(System.in);
+        Customer cstmr = new Customer();
         System.out.println("1. Enroll in Loyalty Program");
-        System.out.println("2. Go Back");
+        System.out.println("2. Logout");
         System.out.print("Your Option : ");
 
         int userop = op.nextInt();
 
         switch (userop) {
         case 1:
-            Customer.enrollInLP();
+            cstmr.enrollInLP(custid);
             break;
         case 2:
-            main(null);
+            logout();
             break;
         default:
             System.out.println("You have entered an invlaid option");
-            customerLanding();
+            customerLanding(custid);
         }
 
         op.close();
     }
 
-    private static void brandLanding() throws Exception {
+    public void brandLanding() throws Exception {
         Scanner op = new Scanner(System.in);
         Brand bd = new Brand();
         System.out.println("1. Add Loyalty Program");
@@ -202,46 +203,4 @@ public class Home {
         op.close();
     }
 
-    /*private static void adminLanding() {
-        Scanner op = new Scanner(System.in);
-        System.out.println("1. Add Brand");
-        System.out.println("2. Add Customer");
-        System.out.println("3. Show Brand's Info");
-        System.out.println("4. Show Customer's Info");
-        System.out.println("5. Add Activity Type");
-        System.out.println("6. Add Reward Type");
-        System.out.println("7. Logout");
-        System.out.print("Your Option : ");
-
-        int userop = op.nextInt();
-
-        switch (userop) {
-        case 1:
-            Admin.addBrand();
-            break;
-        case 2:
-            Admin.addCustomer();
-            break;
-        case 3:
-            Admin.showBrandInfo();
-            break;
-        case 4:
-            Admin.showCustomerInfo();
-            break;
-        case 5:
-            Admin.addActivityType();
-            break;
-        case 6:
-            Admin.addRewardType();
-            break;
-        case 7:
-            logout();
-            break;
-        default:
-            System.out.println("You have entered an invalid option");
-            adminLanding();
-        }
-
-        op.close();
-    }*/
 }

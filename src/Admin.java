@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class Admin {
 
+
     public static void adminLanding() throws Exception {
 
         Scanner op = new Scanner(System.in);
@@ -212,6 +213,7 @@ public class Admin {
             System.out.println("Customer ID not found");
             Admin.adminLanding();
         }
+
     }
 
     public static void showBrandInfoPage() throws Exception {
