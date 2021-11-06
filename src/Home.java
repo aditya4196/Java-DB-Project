@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Home {
     public static void main(String[] args) throws Exception {
-    	Home home = new Home();
+        Home home = new Home();
         DBConnector db = new DBConnector();
         Connection con = db.getConnection();
         db.close(con);
@@ -28,7 +28,7 @@ public class Home {
             home.login();
             break;
         case 3:
-        	home.showQueries();
+            home.showQueries();
             break;
         default:
             System.out.println("Chose an invalid option");
@@ -121,7 +121,7 @@ public class Home {
                 brandLanding();
                 break;
             case "C":
-                customerLanding();
+                customerLanding(usr);
                 break;
             }
         } catch (NullPointerException ne) {
@@ -132,10 +132,10 @@ public class Home {
     }
 
     public void logout() throws Exception {
-    	main(null);
+        main(null);
     }
 
-    public void customerLanding() throws Exception {
+    public void customerLanding(String custid) throws Exception {
         Scanner op = new Scanner(System.in);
         Customer cstmr = new Customer();
         System.out.println("1. Enroll in Loyalty Program");
@@ -146,14 +146,14 @@ public class Home {
 
         switch (userop) {
         case 1:
-            cstmr.enrollInLP();
+            cstmr.enrollInLP(custid);
             break;
         case 2:
             logout();
             break;
         default:
             System.out.println("You have entered an invlaid option");
-            customerLanding();
+            customerLanding(custid);
         }
 
         op.close();
