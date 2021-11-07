@@ -16,6 +16,7 @@ public class Customer extends Throwable {
 	Connection con;
 	Home home = new Home();
 
+
 	public void enrollInLP(String custid) {
 
 		Scanner op = new Scanner(System.in);
@@ -47,10 +48,9 @@ public class Customer extends Throwable {
 
 	}
 
-	private void enrollInLPProcess(String custid) {
-		// Query for enrolling
+	public void enrollInLPProcess(String custid) {
 		System.out.println("Customer enrolled in Loyalty program");
-
+		
 	}
 
 	public int getRewardType(String custid) throws Exception {
@@ -162,7 +162,6 @@ public class Customer extends Throwable {
 			switch (userop) {
 			case 1:
 				performRedeemOperation(getRewardType(custid), custid);
-
 				break;
 			case 2:
 				home.customerLanding(custid);
@@ -213,6 +212,11 @@ public class Customer extends Throwable {
 			fis.close();
 		}
 		return prop;
+	}
+
+	public void performRewardOperation(String custid, int rewid) {
+	
+		
 	}
 
 }

@@ -17,7 +17,7 @@ public class LoyaltyProgram {
             tiersSetup();
             break;
         case 2:
-            bd.tiered();
+           // bd.tiered();
             break;
 		default:
 			System.out.println("You have entered an invlaid option");
@@ -28,7 +28,7 @@ public class LoyaltyProgram {
 	}
 
 	public void tiersSetup() {
-		// Create/update tiers
+		
 		
 	}
 

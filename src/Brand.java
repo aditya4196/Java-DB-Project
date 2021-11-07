@@ -1,10 +1,22 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Properties;
 import java.util.Scanner;
 
-public class Brand {
+public class Brand{
 	
+	DBConnector db = new DBConnector();
+	Properties props;
+	Connection con;
 	Home home = new Home();
 	
-    public void addLoyaltyProgram() throws Exception {
+    public void addLoyaltyProgram(int bid) throws Exception {
     	Scanner op = new Scanner(System.in);
     	System.out.println("1. Regular");
     	System.out.println("2. Tiered");
@@ -15,24 +27,68 @@ public class Brand {
     	
     	switch (userop) {
         case 1:
-            regular();
+            regular(bid);
             break;
         case 2:
-            tiered();
+            tiered(bid);
             break;
         case 3:
-            home.brandLanding();
+            home.brandLanding(bid);
             break;
         default:
             System.out.println("You have entered an invlaid option");
-            addLoyaltyProgram();
+            addLoyaltyProgram(bid);
     	}
     	
     	op.close();
     }
     
-    public void regular() throws Exception {
+    public int insertLoyaltyProgram(int bid, String lpname, int lptype) {
+    	
+    try {	
+    	props = readPropertiesFile();
+		home = new Home();
+		Connection con = db.getConnection();
+		String insertLoyalty =  props.getProperty("insertLoyalty");
+		String getLoyaltyProgram = props.getProperty("getLoyaltyProgram");
+		
+		
+		PreparedStatement statement1 = con.prepareStatement(insertLoyalty);
+		PreparedStatement statement2 = con.prepareStatement(getLoyaltyProgram);
+		
+		statement1.setString(1,lpname);
+		statement1.setInt(2, bid);
+		statement1.setInt(3, lptype);
+		
+		ResultSet rs = statement1.executeQuery();
+		if(rs!=null) {
+			System.out.println("Added Loyalty Program successfully");
+		}
+
+		
+		statement2.setInt(1, bid);
+		rs = statement2.executeQuery();
+		
+		rs.next();
+		return rs.getInt("lpid");
+    }
+    catch(Exception e) {
+    	System.out.println("You can add only one Loyalty Program");
+    	e.printStackTrace();
+    	
+    }
+    
+    return -1;
+
+    }
+    
+    public void regular(int bid) throws Exception {
     	Scanner op = new Scanner(System.in);
+    	System.out.print("Please enter the Loyalty Program Name : ");
+		String lpname = op.nextLine();
+		int lpid = insertLoyaltyProgram(bid, lpname, 0);
+    	
+    	
     	ActivityType at = new ActivityType();
     	RewardType rt = new RewardType();
     	System.out.println("1. Activity Types");
@@ -44,24 +100,28 @@ public class Brand {
 		
     	switch (userop) {
         case 1:
-            at.activityTypes(0);
+            at.activityTypes(0, lpid);
             break;
         case 2:
-            rt.rewardTypes(0);
+            rt.rewardTypes(0, lpid);
             break;
         case 3:
-            addLoyaltyProgram();
+            //addLoyaltyProgram();
             break;
         default:
-            System.out.println("You have entered an invlaid option");
-            regular();
+            System.out.println("You have entered an invalid option");
+            regular(bid);
     	}
     	
     	op.close();
 	}
 
-	public void tiered() throws Exception {
-		Scanner op = new Scanner(System.in);
+	public void tiered(int bid) throws Exception {
+    	Scanner op = new Scanner(System.in);
+    	System.out.print("Please enter the Loyalty Program Name : ");
+		String lpname = op.nextLine();
+		int lpid = insertLoyaltyProgram(bid, lpname, 1);
+		
     	ActivityType at = new ActivityType();
     	RewardType rt = new RewardType();
     	LoyaltyProgram lp = new LoyaltyProgram();
@@ -78,24 +138,24 @@ public class Brand {
             lp.tiersSetupLanding();
             break;
         case 2:
-            at.activityTypes(1);
+            at.activityTypes(1,lpid);
             break;
         case 3:
-            rt.rewardTypes(1);
+            rt.rewardTypes(1,lpid);
             break;
         case 4:
-            addLoyaltyProgram();
+           // addLoyaltyProgram();
             break;
         default:
             System.out.println("You have entered an invlaid option");
-            tiered();
+            tiered(bid);
     	}
     	
     	op.close();
 		
 	}
 
-	public void addRERules() throws Exception {
+	public void addRERules(int bid) throws Exception {
 		Scanner op = new Scanner(System.in);
 		RERules re = new RERules();
     	System.out.println("1. Add RE Rules");
@@ -106,20 +166,20 @@ public class Brand {
     	
     	switch (userop) {
         case 1:
-            re.addRERules();
+           // re.addRERules(bid);
             break;
         case 2:
-            home.brandLanding();
+          //  home.brandLanding();
             break;
         default:
             System.out.println("You have entered an invlaid option");
-            addRERules();
+            addRERules(bid);
     	}
     	
     	op.close();
     }
 
-    public void updateRERules() throws Exception {
+    public void updateRERules(int bid) throws Exception {
     	Scanner op = new Scanner(System.in);
 		RERules re = new RERules();
     	System.out.println("1. Update RE Rules");
@@ -130,20 +190,20 @@ public class Brand {
     	
     	switch (userop) {
         case 1:
-            re.updateRERules();
+           // re.updateRERules(bid);
             break;
         case 2:
-            home.brandLanding();
+           // home.brandLanding(bid);
             break;
         default:
             System.out.println("You have entered an invlaid option");
-            updateRERules();
+           // updateRERules();
     	}
     	
     	op.close();
     }
 
-    public void addRRRules() throws Exception {
+    public void addRRRules(int bid) throws Exception {
     	Scanner op = new Scanner(System.in);
 		RRRules rr = new RRRules();
     	System.out.println("1. Add RR Rules");
@@ -154,20 +214,20 @@ public class Brand {
     	
     	switch (userop) {
         case 1:
-            rr.addRRRules();
+            rr.addRRRules(bid);
             break;
         case 2:
-            home.brandLanding();
+            home.brandLanding(bid);
             break;
         default:
-            System.out.println("You have entered an invlaid option");
-            addRRRules();
+            System.out.println("You have entered an invalid option");
+            addRRRules(bid);
     	}
     	
     	op.close();
     }
 
-    public void updateRRRules() throws Exception {
+    public void updateRRRules(int bid) throws Exception {
     	Scanner op = new Scanner(System.in);
 		RRRules rr = new RRRules();
     	System.out.println("1. Update RR Rules");
@@ -178,14 +238,14 @@ public class Brand {
     	
     	switch (userop) {
         case 1:
-            rr.updateRRRules();
+         //   rr.updateRRRules();
             break;
         case 2:
-            home.brandLanding();
+           // home.brandLanding();
             break;
         default:
             System.out.println("You have entered an invlaid option");
-            updateRRRules();
+            updateRRRules(bid);
     	}
     	
     	op.close();
@@ -205,7 +265,7 @@ public class Brand {
             lp.validateLP();
             break;
         case 2:
-            home.brandLanding();
+           // home.brandLanding();
             break;
         default:
             System.out.println("You have entered an invlaid option");
@@ -214,4 +274,21 @@ public class Brand {
     	
     	op.close();
     }
+    
+	public static Properties readPropertiesFile() throws IOException {
+		FileInputStream fis = null;
+		Properties prop = null;
+		try {
+			fis = new FileInputStream("src/queries.properties");
+			prop = new Properties();
+			prop.load(fis);
+		} catch (FileNotFoundException fnfe) {
+			fnfe.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		} finally {
+			fis.close();
+		}
+		return prop;
+	}
 }
