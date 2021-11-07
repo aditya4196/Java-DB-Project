@@ -234,7 +234,7 @@ public class Customer extends Throwable {
 		int points = rs.getInt("repoints");
 		
 		PreparedStatement statement1;
-		statement1 = conn.prepareStatement("SELECT points from WALLET where cid = ? and lpid = ?");
+		statement1 = conn.prepareStatement("SELECT points, tier from WALLET where cid = ? and lpid = ?");
 		statement1.setInt(1, custid);
 		statement1.setInt(2, lpid);
 		
@@ -242,15 +242,55 @@ public class Customer extends Throwable {
 		rs2.next();
 
 		int custpoints = rs2.getInt("points");
+		int cust_tier = rs2.getInt("tier");
+		
+		statement1 = conn.prepareStatement("SELECT lp_type from LOYALTYPROGRAM where lpid = ?");
+		statement1.setInt(1, lpid);
+		ResultSet rs3 = statement1.executeQuery();
+		rs3.next();
+		
+		int multiplier = 1;
+		int totalpts = 0;
+		int new_cust_tier = cust_tier;
+		String lp_type = rs3.getString("lp_type");
+		
+		if (lp_type == "tiered") {
+			statement1 = conn.prepareStatement("SELECT multiplier from BRAND_TIER where lpid = ? and tier_num = ?");
+			statement1.setInt(1, lpid);
+			statement1.setInt(2, cust_tier);
+			ResultSet rs4 = statement1.executeQuery();
+			rs4.next();
+			
+			multiplier = rs4.getInt("multiplier");
+			totalpts = custpoints + (points * multiplier);
+			
+			statement1 = conn.prepareStatement("SELECT tier,points from BRAND_TIER where lpid = ? and tier_num >= ?");
+			statement1.setInt(1, lpid);
+			statement1.setInt(2, cust_tier);
+			ResultSet rs5 = statement1.executeQuery();
+			
+			while(rs5.next()) {
+				
+				int tier = rs5.getInt("tier");
+				int rew_pts = rs5.getInt("points");
+				
+				if (totalpts >= rew_pts)
+					new_cust_tier = tier;
+			}
+			
+		}
 
-		int totalpts = custpoints + points;
+		totalpts = custpoints + (points * multiplier);
 
-		statement1 = conn.prepareStatement("UPDATE WALLET set points = ? where cid = ? and lpid = ?");
+		statement1 = conn.prepareStatement("UPDATE WALLET set points = ?, cust_tier = ? where cid = ? and lpid = ?");
 		statement1.setInt(1, totalpts);
-		statement1.setInt(2, custid);
-		statement1.setInt(3, lpid);
+		statement1.setInt(2, new_cust_tier);
+		statement1.setInt(3, custid);
+		statement1.setInt(4, lpid);
 
 		statement1.executeUpdate();
+		
+		
 
 		System.out.println("You have earned " + points + " points");
 		
