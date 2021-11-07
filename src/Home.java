@@ -124,7 +124,16 @@ public class Home {
                 brandLanding(bid);
                 break;
             case "C":
-                customerLanding(usr);
+            	
+                statement = conn.prepareStatement("SELECT c.cid from Customer c, U_Admin u where u.userid = c.userid and u.username = ? and u.userpwd = ?");
+                statement.setString(1, usr);
+                statement.setString(2, pass);
+                ResultSet rs2 = statement.executeQuery();
+                rs2.next();
+                System.out.println(rs2);
+                int custid = rs2.getInt("cid");
+                
+                customerLanding(custid);
                 break;
             }
         } catch (NullPointerException ne) {
@@ -138,11 +147,14 @@ public class Home {
         main(null);
     }
 
-    public void customerLanding(String custid) throws Exception {
+    public void customerLanding(int custid) throws Exception {
         Scanner op = new Scanner(System.in);
         Customer cstmr = new Customer();
         System.out.println("1. Enroll in Loyalty Program");
-        System.out.println("2. Logout");
+        System.out.println("2. Reward Activities");
+        System.out.println("3. View Wallet");
+        System.out.println("4. Redeem Points");
+        System.out.println("5. Logout");
         System.out.print("Your Option : ");
 
         int userop = op.nextInt();
@@ -152,8 +164,17 @@ public class Home {
             cstmr.enrollInLP(custid);
             break;
         case 2:
-            logout();
-            break;
+        	cstmr.getrewardActivitiesScreen(custid);
+        	break;
+        case 3:
+        	cstmr.viewWallet(custid);
+        	break;
+        case 4:
+        	cstmr.redeemPointsUI(custid);
+        	break;
+        case 5:
+        	logout();
+        	break;
         default:
             System.out.println("You have entered an invlaid option");
             customerLanding(custid);
