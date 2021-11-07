@@ -297,7 +297,7 @@ public class Customer extends Throwable {
 
 	}
 	
-	public void redeemPoints(int custid,int lpid, String rewtype) throws Exception {
+	public void redeemPoints(int custid, int lpid, String rewtype) throws Exception {
 
 		DBConnector db = new DBConnector();
         Connection con = db.getConnection();
