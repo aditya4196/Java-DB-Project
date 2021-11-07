@@ -5,11 +5,15 @@ import java.util.Scanner;
 
 public class Home {
     public static void main(String[] args) throws Exception {
+
         Home home = new Home();
         DBConnector db = new DBConnector();
         Connection con = db.getConnection();
         db.close(con);
         Scanner op = new Scanner(System.in);
+
+        Admin.adminLanding();
+        
         System.out.println("Welcome to the MarketPlace !!!");
 
         System.out.println("Please choose from the below options");
@@ -20,6 +24,8 @@ public class Home {
 
         int option = op.nextInt();
 
+        //Admin.adminLanding();
+        
         switch (option) {
         case 1:
             home.signup();
@@ -115,7 +121,7 @@ public class Home {
 
             switch (usercode) {
             case "A":
-                adminLanding();
+                Admin.adminLanding();
                 break;
             case "B":
                 brandLanding();
@@ -203,47 +209,4 @@ public class Home {
         op.close();
     }
 
-    public void adminLanding() throws Exception {
-        Scanner op = new Scanner(System.in);
-        Admin ad = new Admin();
-        System.out.println("1. Add Brand");
-        System.out.println("2. Add Customer");
-        System.out.println("3. Show Brand's Info");
-        System.out.println("4. Show Customer's Info");
-        System.out.println("5. Add Activity Type");
-        System.out.println("6. Add Reward Type");
-        System.out.println("7. Logout");
-        System.out.print("Your Option : ");
-
-        int userop = op.nextInt();
-
-        switch (userop) {
-        case 1:
-            ad.addBrand();
-            break;
-        case 2:
-            ad.addCustomer();
-            break;
-        case 3:
-            ad.showBrandInfo();
-            break;
-        case 4:
-            ad.showCustomerInfo();
-            break;
-        case 5:
-            ad.addActivityType();
-            break;
-        case 6:
-            ad.addRewardType();
-            break;
-        case 7:
-            logout();
-            break;
-        default:
-            System.out.println("You have entered an invalid option");
-            adminLanding();
-        }
-
-        op.close();
-    }
 }
