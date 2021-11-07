@@ -20,7 +20,7 @@ public class Customer extends Throwable {
 	Home home = new Home();
 
 
-	public void enrollInLP(String custid) {
+	public void enrollInLP(int custid) {
 
 		Scanner op = new Scanner(System.in);
 		System.out.println("1. Enroll in Loyalty Program");
@@ -51,8 +51,9 @@ public class Customer extends Throwable {
 
 	}
 
-	public void enrollInLPProcess(String custid) {
+	public void enrollInLPProcess(int custid) {
 		System.out.println("Customer enrolled in Loyalty program");
+		int x = getlpid(custid);
 		
 	}
 

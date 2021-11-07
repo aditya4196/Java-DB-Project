@@ -11,8 +11,6 @@ public class Home {
         Connection con = db.getConnection();
         db.close(con);
         Scanner op = new Scanner(System.in);
-
-        Admin.adminLanding();
         
         System.out.println("Welcome to the MarketPlace !!!");
 
@@ -23,8 +21,6 @@ public class Home {
         System.out.print("Your Option : ");
 
         int option = op.nextInt();
-
-        //Admin.adminLanding();
         
         switch (option) {
         case 1:
@@ -33,8 +29,9 @@ public class Home {
         case 2:
             home.login();
             break;
+            
         case 3:
-            home.showQueries();
+            Queries.showQueries();
             break;
         default:
             System.out.println("Chose an invalid option");
@@ -44,12 +41,7 @@ public class Home {
         op.close();
     }
 
-    public void showQueries() {
-        // logic to see all queries
-    }
-
     public void signup() throws Exception {
-
         DBConnector db = new DBConnector();
         Connection con = db.getConnection();
         db.close(con);
@@ -124,7 +116,12 @@ public class Home {
                 Admin.adminLanding();
                 break;
             case "B":
-                brandLanding();
+            	statement = conn.prepareStatement("SELECT BID from BRAND where userid = (Select userid from U_ADMIN where USERNAME = ?)");
+                statement.setString(1, usr);
+                ResultSet rs1 = statement.executeQuery();
+                rs1.next();
+                int bid = rs1.getInt("bid");
+                brandLanding(bid);
                 break;
             case "C":
                 customerLanding(usr);
@@ -165,7 +162,7 @@ public class Home {
         op.close();
     }
 
-    public void brandLanding() throws Exception {
+    public void brandLanding(int bid) throws Exception {
         Scanner op = new Scanner(System.in);
         Brand bd = new Brand();
         System.out.println("1. Add Loyalty Program");
@@ -181,19 +178,19 @@ public class Home {
 
         switch (userop) {
         case 1:
-            bd.addLoyaltyProgram();
+            bd.addLoyaltyProgram(bid);
             break;
         case 2:
-            bd.addRERules();
+            bd.addRERules(bid);
             break;
         case 3:
-            bd.updateRERules();
+            bd.updateRERules(bid);
             break;
         case 4:
-            bd.addRRRules();
+            bd.addRRRules(bid);
             break;
         case 5:
-            bd.updateRRRules();
+            bd.updateRRRules(bid);
             break;
         case 6:
             bd.validateLoyaltyProgram();
@@ -203,7 +200,7 @@ public class Home {
             break;
         default:
             System.out.println("You have entered an invlaid option");
-            brandLanding();
+            brandLanding(bid);
         }
 
         op.close();
