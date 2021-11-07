@@ -81,8 +81,7 @@ public class Admin {
             System.out.println("You chose an invalid option");
         }
 
-        op1.close();
-
+        
     }
 
     public static void addRewardType() throws Exception {
@@ -152,7 +151,6 @@ public class Admin {
             System.out.println("You chose an invalid option");
         }
 
-        op1.close();
 
     }
 
@@ -219,7 +217,6 @@ public class Admin {
             System.out.println("You chose an invalid option");
         }
 
-        op1.close();
     }
 
     public  static  void showCustomerInfo() throws Exception {
@@ -253,7 +250,6 @@ public class Admin {
                 System.out.println("");
             }
             
-            //op1.close();
             System.out.println(" ");
             db.close(con);
             Admin.adminLanding();
@@ -293,7 +289,6 @@ public class Admin {
         }
 
         System.out.println(" ");
-        op1.close();
 
     }
 
@@ -327,7 +322,6 @@ public class Admin {
                 System.out.println("");
             }
             
-            //op1.close();
             db.close(con);
             System.out.println(" ");
             Admin.adminLanding();         
@@ -366,7 +360,6 @@ public class Admin {
             System.out.println("You chose an invalid option");
         }
 
-        op1.close();
 
     }
 
@@ -421,7 +414,6 @@ public class Admin {
 	
 	        System.out.println("Customer Added Successfully");
 	        Admin.adminLanding();
-	        op1.close();
 	        System.out.println(" ");
 	        db.close(con);
         
@@ -459,8 +451,6 @@ public class Admin {
         default:
             System.out.println("You chose an invalid option");
         }
-
-        op1.close();
 
     }
 
@@ -517,7 +507,6 @@ public class Admin {
         System.out.println("Brand Added Successfully");
         System.out.println(" ");
         Admin.adminLanding();
-        op1.close();
         db.close(con);
         
         } 
