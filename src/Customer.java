@@ -33,10 +33,10 @@ public class Customer extends Throwable {
 		try {
 			switch (userop) {
 			case 1:
-				//getrewardActivitiesScreen(custid);
+				enrollInLPProcess(custid);
 				break;
 			case 2:
-				//home.customerLanding(custid);
+				home.customerLanding(custid);
 				break;
 			default:
 				System.out.println("You have entered an invalid option");
@@ -51,10 +51,52 @@ public class Customer extends Throwable {
 
 	}
 
-	public void enrollInLPProcess(int custid) throws Exception {
-		System.out.println("Customer enrolled in Loyalty program");
-		int x = getlpid(custid);
+	public int getLoyaltyProgramChosen() throws Exception {
 		
+		Scanner op = new Scanner(System.in);
+		Map<Integer, Integer> lpkeys = new HashMap();
+		
+    	props = readPropertiesFile();
+		home = new Home();
+		Connection con = db.getConnection();
+		String selectLPs =  props.getProperty("getAllLoyaltyPrograms");	
+		
+		PreparedStatement statement = con.prepareStatement(selectLPs);
+
+		
+		ResultSet rs = statement.executeQuery();
+		
+		int ind = 1;
+		while(rs.next()) {
+			lpkeys.put(ind, rs.getInt("lpid"));
+    	System.out.println(ind + ". " +rs.getString("lpname"));
+		ind++;
+		}
+		System.out.print("Choose the Loyalty Program : ");
+		int userop = op.nextInt();
+		op.close();
+		return lpkeys.get(userop);
+				
+	}
+
+	public void enrollInLPProcess(int custid) throws Exception {
+	  try {	
+		db = new DBConnector();
+		Connection con = db.getConnection();
+		int lpid = getLoyaltyProgramChosen();
+		String insertWallet = props.getProperty("insertIntoWallet");
+		PreparedStatement statement2 = con.prepareStatement(insertWallet);
+		statement2.setInt(1, custid);
+		statement2.setInt(2, lpid);
+		statement2.executeQuery();
+		
+		System.out.println("Customer is enrolled in the Loyalty Program");
+		
+	  }
+	  catch(Exception e) {
+		  System.out.println("Customer is already enrolled in the Loyalty Program");
+		  e.printStackTrace();
+	  }
 	}
 
 	/*public void rewardActivites(int custid, int lpid) throws Exception {
@@ -486,7 +528,7 @@ public class Customer extends Throwable {
 		redeemPoints(custid, lpid, userip);
 	}
 	
-	public void viewWallet(int custid) {
+	public void viewWallet(int custid) throws Exception {
 		try {
 			props = readPropertiesFile();
 			home = new Home();
@@ -499,31 +541,13 @@ public class Customer extends Throwable {
 			while (rs.next()) {
 				
 				System.out.println("Points you have in your wallet for Loyalty Program " +rs.getString("lpname")+" are "
-						+ rs.getString("points"));
+						+ rs.getString("points") + " " + rs.getString("num_cust_gc") + " gift cards and " + rs.getString("num_cust_fp") +
+						" free products");
 			}
-
-			Scanner op = new Scanner(System.in);
-			System.out.println("1. Go Back");
-			System.out.println("2. Log Out");
-			System.out.print("Your Option : ");
-
-			int userop = op.nextInt();
-			switch (userop) {
-			case 1:
-		        home.customerLanding(custid);
-				break;
-			case 2:
-				home.login();
-				break;
-			default:
-				System.out.println("You have entered an invalid option");
-				viewWallet(custid);
-			}
-
-			op.close();
-
+			home.customerLanding(custid);
 		} catch (Exception e) {
 			e.printStackTrace();
+			home.customerLanding(custid);
 		}
 
 	}

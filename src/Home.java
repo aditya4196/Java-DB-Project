@@ -42,17 +42,8 @@ public class Home {
     }
 
     public void signup() throws Exception {
-        DBConnector db = new DBConnector();
-        Connection con = db.getConnection();
-        db.close(con);
         Scanner op = new Scanner(System.in);
         System.out.println("Welcome to SignUp Screen !!!");
-        System.out.print("Define a username for yourself: ");
-        String usr = op.nextLine();
-        System.out.println();
-        System.out.print("Enter your new password: ");
-        String pass = op.nextLine();
-
         System.out.println("Please choose from below, to which category you belong");
         System.out.println("1. Customer");
         System.out.println("2. Brand");
@@ -78,14 +69,16 @@ public class Home {
         op.close();
     }
 
-    public void customerSignup() {
+    public void customerSignup() throws Exception {
         System.out.println("Welcome to Customer Signup");
-        // Ask for customer details and insert
+        Admin.addCustomer();
+        main(null);
     }
 
-    public void brandSignup() {
+    public void brandSignup() throws Exception {
         System.out.println("Welcome to Brand Signup");
-        // Ask for brand details and insert
+        Admin.addBrand();
+        main(null);
     }
 
     public void login() throws Exception {
@@ -214,7 +207,7 @@ public class Home {
             bd.updateRRRules(bid);
             break;
         case 6:
-            bd.validateLoyaltyProgram();
+            bd.validateLoyaltyProgram(bid);
             break;
         case 7:
             logout();

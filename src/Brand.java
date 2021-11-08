@@ -106,7 +106,7 @@ public class Brand{
             rt.rewardTypes(0, lpid);
             break;
         case 3:
-            //addLoyaltyProgram();
+            addLoyaltyProgram(bid);
             break;
         default:
             System.out.println("You have entered an invalid option");
@@ -135,7 +135,7 @@ public class Brand{
 		
     	switch (userop) {
     	case 1:
-            lp.tiersSetupLanding();
+            lp.tiersSetupLanding(lpid);
             break;
         case 2:
             at.activityTypes(1,lpid);
@@ -144,7 +144,7 @@ public class Brand{
             rt.rewardTypes(1,lpid);
             break;
         case 4:
-           // addLoyaltyProgram();
+           addLoyaltyProgram(bid);
             break;
         default:
             System.out.println("You have entered an invlaid option");
@@ -166,10 +166,10 @@ public class Brand{
     	
     	switch (userop) {
         case 1:
-           // re.addRERules(bid);
+           re.addRERules(bid);
             break;
         case 2:
-          //  home.brandLanding();
+           home.brandLanding(bid);
             break;
         default:
             System.out.println("You have entered an invlaid option");
@@ -190,14 +190,14 @@ public class Brand{
     	
     	switch (userop) {
         case 1:
-           // re.updateRERules(bid);
+           re.updateRERules(bid);
             break;
         case 2:
-           // home.brandLanding(bid);
+           home.brandLanding(bid);
             break;
         default:
             System.out.println("You have entered an invlaid option");
-           // updateRERules();
+            updateRERules(bid);
     	}
     	
     	op.close();
@@ -238,10 +238,10 @@ public class Brand{
     	
     	switch (userop) {
         case 1:
-         //   rr.updateRRRules();
+        	rr.updateRRRules(bid);
             break;
         case 2:
-           // home.brandLanding();
+            home.brandLanding(bid);
             break;
         default:
             System.out.println("You have entered an invlaid option");
@@ -251,7 +251,7 @@ public class Brand{
     	op.close();
     }
 
-    public void validateLoyaltyProgram() throws Exception {
+    public void validateLoyaltyProgram(int bid) throws Exception {
     	Scanner op = new Scanner(System.in);
 		LoyaltyProgram lp = new LoyaltyProgram();
     	System.out.println("1. Validate Loyalty Program");
@@ -262,14 +262,14 @@ public class Brand{
     	
     	switch (userop) {
         case 1:
-            lp.validateLP();
+            lp.validateLP(bid);
             break;
         case 2:
-           // home.brandLanding();
+            home.brandLanding(bid);
             break;
         default:
             System.out.println("You have entered an invlaid option");
-            validateLoyaltyProgram();
+            validateLoyaltyProgram(bid);
     	}
     	
     	op.close();

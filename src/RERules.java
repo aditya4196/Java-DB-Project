@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -22,32 +24,26 @@ public class RERules {
 			
 		   	Scanner op = new Scanner(System.in);
 			RRRules rr = new RRRules();
-	    	System.out.println("1. Add RE Rules");
-	    	System.out.println("2. Go Back");
-	    	System.out.print("Your option: ");
-	    	
-	    	int userop = op.nextInt();
-	    	
-	    	if(userop == 1) {
 			String addRERule = props.getProperty("addRERule");
 			statement = con.prepareStatement(addRERule);
-			
-			statement.setInt(2, actType.getSingleActivityType());
+			int actid = actType.showActivityTypesFromRules(bid);
 			
 			System.out.print("Enter the points to be added to the rule :");
 			int repoints = op.nextInt();
-			
 			statement.setInt(1,repoints);
-			statement.setInt(3, bid);
+			statement.setInt(4, bid);
+			statement.setInt(5, actid);
 			
 			statement.executeQuery();
 			System.out.println("RE Points added successfully");
-	    	}
+	    	
 	 }
 	 
 	 catch(Exception e) {
 		System.out.println("RE Points not added successfully");
+		e.printStackTrace();
 	 }
+	 
 			
 	}
 	
@@ -59,30 +55,29 @@ public class RERules {
 				
 			   	Scanner op = new Scanner(System.in);
 				RRRules rr = new RRRules();
-		    	System.out.println("1. Update RE Rules");
-		    	System.out.println("2. Go Back");
-		    	System.out.print("Your option: ");
-		    	
-		    	int userop = op.nextInt();
-		    	
-		    	if(userop == 1) {
+
 				String updateRERule = props.getProperty("updateRERule");
 				statement = con.prepareStatement(updateRERule);
 				
-				statement.setInt(2, actType.getSingleActivityType());
+				//System.out.print("Enter the Reward Rule code to be updated:");
+				//int reid = op.nextInt();
+				
+				int actid = actType.showActivityTypesFromRules(bid);
 				
 				System.out.print("Enter the points to be updated to the rule :");
 				int repoints = op.nextInt();
 				
 				statement.setInt(1,repoints);
-				statement.setInt(3, bid);
+				statement.setInt(3, actid);
+				statement.setInt(2, bid);
 				
 				statement.executeQuery();
 				System.out.println("RE Points updated successfully");
-		    	}
+		    	
 			 }
 			 catch(Exception e) {
 				System.out.println("RE Points not updated successfully");
+				e.printStackTrace();
 			 }
 	}
 	

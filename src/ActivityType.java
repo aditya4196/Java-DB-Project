@@ -104,18 +104,31 @@ public class ActivityType {
 		return prop;
 	}
 	
-	public void purchase() {
-		// Create/update purchase
+	public int showActivityTypesFromRules(int lpid) throws Exception {
 		
-	}
-	
-	public void leaveAReview() {
-		// Create/update leave a review
+		Scanner op = new Scanner(System.in);
+		Map<Integer, Integer> rewkeys = new HashMap();
 		
-	}
+		props = readPropertiesFile();
+		home = new Home();
+		Connection con = db.getConnection();
+		String selectActIDs =  props.getProperty("selectActIDsFromRules");	
+		
+		PreparedStatement statement = con.prepareStatement(selectActIDs);
 
-	public void referAFriend() {
-		// Create/update refer a friend
 		
+		ResultSet rs = statement.executeQuery();
+		
+		int ind = 1;
+		while(rs.next()) {
+			rewkeys.put(ind, rs.getInt("actid"));
+		System.out.println(ind + ". " +rs.getString("actname"));
+		ind++;
+		}
+		
+		System.out.print("Choose the option: ");
+		
+		
+		return(rewkeys.get(op.nextInt()));		
 	}
 }

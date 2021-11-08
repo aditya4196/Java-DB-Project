@@ -103,14 +103,30 @@ public class RewardType {
 		return prop;
 	}
 
-	public void giftCard() {
-		// Create/update gift card
+	public int showRewardTypesFromRules(int bid) throws Exception {
 		
-	}
+		Scanner op = new Scanner(System.in);
+		Map<Integer, Integer> rewkeys = new HashMap();
+		
+		props = readPropertiesFile();
+		home = new Home();
+		Connection con = db.getConnection();
+		String selectRewardIDs =  props.getProperty("selectRewardIDsFromRules");	
+		
+		PreparedStatement statement = con.prepareStatement(selectRewardIDs);
 
-	public void freeProduct() {
-		// Create/update free product
 		
+		ResultSet rs = statement.executeQuery();
+		
+		int ind = 1;
+		while(rs.next()) {
+			rewkeys.put(ind, rs.getInt("rewid"));
+		System.out.println(ind + ". " +rs.getString("rewname"));
+		ind++;
+		}
+		
+		System.out.print("Choose the option: ");
+		return(rewkeys.get(op.nextInt()));		
 	}
 
 }
