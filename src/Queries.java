@@ -87,11 +87,13 @@ public class Queries {
                     System.out.print( rsmd.getColumnName(i)  + "--" + columnValue);
                 }
                 System.out.println("");
+                db.close(conn);
+                Queries.showQueries();
             }
             
             System.out.println(" ");
             db.close(conn);
-            Admin.adminLanding();
+            Queries.showQueries();
         } 
         
         catch (Exception e) {
@@ -109,8 +111,8 @@ public class Queries {
         
         try 
         {
-            statement = conn.prepareStatement("SELECT CID, CNAME, PHONENO, CADDR, USERID from Customer where CID NOT IN "
-            		+ "(Select CID from WALLET where LPID = (Select LPID from LOYALTYPROGRAM where BID = '3'))");
+            statement = conn.prepareStatement("SELECT CID, LPID from Wallet W1 where NOT EXISTS "
+            		+ "(Select CID, LPID from ACTIVITYINSTANCE AI where W.CID=AI.CID and W.LPID = AI.LPID)");
             
             ResultSet rs = statement.executeQuery();
             
@@ -129,12 +131,12 @@ public class Queries {
             
             System.out.println(" ");
             db.close(conn);
-            Admin.adminLanding();
+            Queries.showQueries();
         } 
         
         catch (Exception e) {
             System.out.println("Customer ID not found");
-            Admin.adminLanding();
+            Queries.showQueries();
         }
 
     }
@@ -146,8 +148,7 @@ public class Queries {
         
         try 
         {
-            statement = conn.prepareStatement("SELECT CID, CNAME, PHONENO, CADDR, USERID from Customer where CID NOT IN "
-            		+ "(Select CID from WALLET where LPID = (Select LPID from LOYALTYPROGRAM where BID = '3'))");
+            statement = conn.prepareStatement("SELECT REWID, BID, LPID, REWNAME from RRRULES where BID = '3'");
             
             ResultSet rs = statement.executeQuery();
             
@@ -166,12 +167,12 @@ public class Queries {
             
             System.out.println(" ");
             db.close(conn);
-            Admin.adminLanding();
+            Queries.showQueries();
         } 
         
         catch (Exception e) {
             System.out.println("Customer ID not found");
-            Admin.adminLanding();
+            Queries.showQueries();
         }
 
     }
@@ -183,8 +184,8 @@ public class Queries {
         
         try 
         {
-            statement = conn.prepareStatement("SELECT CID, CNAME, PHONENO, CADDR, USERID from Customer where CID NOT IN "
-            		+ "(Select CID from WALLET where LPID = (Select LPID from LOYALTYPROGRAM where BID = '3'))");
+            statement = conn.prepareStatement("SELECT LPID from RERULES where ACTID = "
+            		+ "(Select ACTID from ACTIVITYTYPE where ACTNAME = 'REFER_FRIEND')");
             
             ResultSet rs = statement.executeQuery();
             
@@ -203,12 +204,12 @@ public class Queries {
             
             System.out.println(" ");
             db.close(conn);
-            Admin.adminLanding();
+            Queries.showQueries();
         } 
         
         catch (Exception e) {
             System.out.println("Customer ID not found");
-            Admin.adminLanding();
+            Queries.showQueries();
         }
 
     }
@@ -220,8 +221,9 @@ public class Queries {
         
         try 
         {
-            statement = conn.prepareStatement("SELECT CID, CNAME, PHONENO, CADDR, USERID from Customer where CID NOT IN "
-            		+ "(Select CID from WALLET where LPID = (Select LPID from LOYALTYPROGRAM where BID = '3'))");
+            statement = conn.prepareStatement("SELECT COUNT(*) as count from Customer where LPID = "
+            		+ "(Select distinct LPID from WALLET where BID = '1') and ACTID in"
+            		+ "(Select ACTID from RERULES where BID = '1'))");
             
             ResultSet rs = statement.executeQuery();
             
@@ -240,12 +242,12 @@ public class Queries {
             
             System.out.println(" ");
             db.close(conn);
-            Admin.adminLanding();
+            Queries.showQueries();
         } 
         
         catch (Exception e) {
             System.out.println("Customer ID not found");
-            Admin.adminLanding();
+            Queries.showQueries();
         }
 
     }
@@ -257,8 +259,8 @@ public class Queries {
         
         try 
         {
-            statement = conn.prepareStatement("SELECT CID, CNAME, PHONENO, CADDR, USERID from Customer where CID NOT IN "
-            		+ "(Select CID from WALLET where LPID = (Select LPID from LOYALTYPROGRAM where BID = '3'))");
+            statement = conn.prepareStatement("SELECT CID from REWARDINSTANCES where BID = '1' "
+            		+ "Group by CID having count(*)>1");
             
             ResultSet rs = statement.executeQuery();
             
@@ -277,12 +279,12 @@ public class Queries {
             
             System.out.println(" ");
             db.close(conn);
-            Admin.adminLanding();
+            Queries.showQueries();
         } 
         
         catch (Exception e) {
             System.out.println("Customer ID not found");
-            Admin.adminLanding();
+            Queries.showQueries();
         }
 
     }
@@ -294,8 +296,8 @@ public class Queries {
         
         try 
         {
-            statement = conn.prepareStatement("SELECT CID, CNAME, PHONENO, CADDR, USERID from Customer where CID NOT IN "
-            		+ "(Select CID from WALLET where LPID = (Select LPID from LOYALTYPROGRAM where BID = '3'))");
+            statement = conn.prepareStatement("SELECT BID from REWARDINSTANCE "
+            		+ "GROUP by BID having Sum(POINTS_REDEEM)<500");
             
             ResultSet rs = statement.executeQuery();
             
@@ -314,12 +316,12 @@ public class Queries {
             
             System.out.println(" ");
             db.close(conn);
-            Admin.adminLanding();
+            Queries.showQueries();
         } 
         
         catch (Exception e) {
             System.out.println("Customer ID not found");
-            Admin.adminLanding();
+            Queries.showQueries();
         }
 
     }
@@ -331,8 +333,8 @@ public class Queries {
         
         try 
         {
-            statement = conn.prepareStatement("SELECT CID, CNAME, PHONENO, CADDR, USERID from Customer where CID NOT IN "
-            		+ "(Select CID from WALLET where LPID = (Select LPID from LOYALTYPROGRAM where BID = '3'))");
+            statement = conn.prepareStatement("SELECT count(*) from ACTIVITYINSTANCE where CID ='1' and BID = '2' and "
+            		+ "EARN_DATE>'08/01/2021' and EARN_DATE<'09/30/2021'");
             
             ResultSet rs = statement.executeQuery();
             
@@ -351,12 +353,12 @@ public class Queries {
             
             System.out.println(" ");
             db.close(conn);
-            Admin.adminLanding();
+            Queries.showQueries();
         } 
         
         catch (Exception e) {
             System.out.println("Customer ID not found");
-            Admin.adminLanding();
+            Queries.showQueries();
         }
 
     }

@@ -537,12 +537,16 @@ public class Customer extends Throwable {
 			PreparedStatement statement = con.prepareStatement(viewWallet);
 			statement.setInt(1, custid);
 			ResultSet rs = statement.executeQuery();
-
-			while (rs.next()) {
-				
-				System.out.println("Points you have in your wallet for Loyalty Program " +rs.getString("lpname")+" are "
-						+ rs.getString("points") + " " + rs.getString("num_cust_gc") + " gift cards and " + rs.getString("num_cust_fp") +
-						" free products");
+			if(rs != null) {
+				while (rs.next()) {
+					
+					System.out.println("Points you have in your wallet for Loyalty Program " +rs.getString("lpname")+" are "
+							+ rs.getString("points") + " " + rs.getString("num_cust_gc") + " gift cards and " + rs.getString("num_cust_fp") +
+							" free products");
+				}
+			}
+			else {
+				System.out.println("You are not associated with a Loyalty Program");
 			}
 			home.customerLanding(custid);
 		} catch (Exception e) {
