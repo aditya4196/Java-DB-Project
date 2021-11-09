@@ -166,7 +166,8 @@ public class Admin {
         
         }
         catch (Exception e) {
-            System.out.println("Customer ID not found");
+        	e.printStackTrace();
+            //System.out.println("Customer ID not found");
             Admin.adminLanding();
         }
         
@@ -284,13 +285,12 @@ public class Admin {
         
         try 
         {
-            statement = conn.prepareStatement("SELECT b.bname, b.baddr, b.bjoindate from brand b, U_Admin u where bname = ? and b.userid = u.userid");
+            statement = conn.prepareStatement("SELECT b.bname, b.baddr, b.bjoindate from brand b, U_Admin u where b.userid = u.userid and b.bname = ?");
             statement.setString(1, brandUserName);
             
             ResultSet rs = statement.executeQuery();
             
             ResultSetMetaData rsmd = rs.getMetaData();
-            
             int columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
@@ -308,7 +308,8 @@ public class Admin {
         } 
         
         catch (Exception e) {
-            System.out.println("Brand ID not found");
+        	e.printStackTrace();
+            //System.out.println("Brand ID not found");
             Admin.adminLanding();
         }
 
@@ -349,18 +350,18 @@ public class Admin {
         //db.close(con);
         Scanner op1 = new Scanner(System.in);
 
-        System.out.println("Please enter the Cutomer Name : ");
-        String custName = op1.nextLine();
-        System.out.println("Please enter the Cutomer Password : ");
+        System.out.println("Please enter the Customer username : ");
+        String custUserName = op1.nextLine();
+        System.out.println("Please enter the Customer Password : ");
         String custPassword = op1.nextLine();
-        System.out.println("Please enter the Cutomer Address : ");
+        System.out.println("Please enter the Customer Address : ");
         String customerAddress = op1.nextLine();
-        System.out.println("Please enter the Cutomer Phone Number : ");
+        System.out.println("Please enter the Customer Phone Number : ");
         String customerPhone = op1.nextLine();
         
-        String sql = "INSERT INTO U_ADMIN (uusername, usercode, userpwd) VALUES (?,?,?)";
+        String sql = "INSERT INTO U_ADMIN (username, usercode, userpwd) VALUES (?,?,?)";
         PreparedStatement pstmt = con.prepareStatement(sql);
-        pstmt.setString(1, custName);
+        pstmt.setString(1, custUserName);
         pstmt.setString(2, "C");
         pstmt.setString(3, custPassword);
         pstmt.executeUpdate();
@@ -368,7 +369,7 @@ public class Admin {
         PreparedStatement statement;
         try {
 	        statement = con.prepareStatement("SELECT userid from U_ADMIN where username = ?");
-	        statement.setString(1, custName);
+	        statement.setString(1, custUserName);
 	        
 	        ResultSet rs = statement.executeQuery();
 	        rs.next();
@@ -377,14 +378,13 @@ public class Admin {
 	        //Admin.adminLanding();
 	        System.out.println(userid);
 	      
-	        Integer id = 4000;
-	        String sql1 = "INSERT INTO CUSTOMER (cid, cname, phoneno, caddr, userid) VALUES (?,?,?,?,?)";
+	        //Integer id = 4000;
+	        String sql1 = "INSERT INTO CUSTOMER (cname, phoneno, caddr, userid) VALUES (?,?,?,?)";
 	        PreparedStatement pstmt1 = con.prepareStatement(sql1);
-	        pstmt1.setInt(1, id++);
-	        pstmt1.setString(2, custName);
-	        pstmt1.setString(3, customerPhone);
-	        pstmt1.setString(4, customerAddress);
-	        pstmt1.setInt(5, userid);
+	        pstmt1.setString(1, custUserName);
+	        pstmt1.setString(2, customerPhone);
+	        pstmt1.setString(3, customerAddress);
+	        pstmt1.setInt(4, userid);
 	        
 	        pstmt1.executeUpdate();
 	
@@ -438,8 +438,8 @@ public class Admin {
         
         Scanner op1 = new Scanner(System.in);
         
-        System.out.println("Please enter the Brand Name : ");
-        String brandName = op1.nextLine();
+        System.out.println("Please enter the Brand username : ");
+        String brandUserName = op1.nextLine();
         System.out.println("Please enter the Brand Password : ");
         String brandPassword = op1.nextLine();
         System.out.println("Please enter the Brand Address : ");
@@ -447,7 +447,7 @@ public class Admin {
         
         String sql = "INSERT INTO U_ADMIN (username, usercode, userpwd) VALUES (?,?,?)";
         PreparedStatement pstmt = con.prepareStatement(sql);
-        pstmt.setString(1, brandName);
+        pstmt.setString(1, brandUserName);
         pstmt.setString(2, "B");
         pstmt.setString(3, brandPassword);
         pstmt.executeUpdate();
@@ -455,7 +455,7 @@ public class Admin {
         PreparedStatement statement;
         try {
             statement = con.prepareStatement("SELECT userid from U_ADMIN where username = ?");
-            statement.setString(1, brandName);
+            statement.setString(1, brandUserName);
             
             ResultSet rs = statement.executeQuery();
             rs.next();
@@ -465,13 +465,12 @@ public class Admin {
             System.out.println(userid);
       
         Integer id = 2000;
-        String sql1 = "INSERT INTO BRAND (bid, bname, baddr, bjoindate, userid) VALUES (?,?,?,(SELECT SYSDATE FROM DUAL),?)";
+        String sql1 = "INSERT INTO BRAND (bname, baddr, bjoindate, userid) VALUES (?,?,(SELECT SYSDATE FROM DUAL),?)";
         PreparedStatement pstmt1 = con.prepareStatement(sql1);
-        pstmt1.setInt(1, id++);
-        pstmt1.setString(2, brandName);
-        pstmt1.setString(3, brandAddress);
+        pstmt1.setString(1, brandUserName);
+        pstmt1.setString(2, brandAddress);
         //pstmt1.setDate(4, con.prepareStatement("SELECT SYSDATE FROM DUAL").executeQuery().getDate(0));
-        pstmt1.setInt(4, userid);
+        pstmt1.setInt(3, userid);
         
         pstmt1.executeUpdate();
 

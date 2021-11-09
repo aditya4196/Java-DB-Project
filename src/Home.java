@@ -103,6 +103,7 @@ public class Home {
             ResultSet rs = statement.executeQuery();
             rs.next();
             String usercode = rs.getString("usercode");
+            System.out.println(usercode);
 
             switch (usercode) {
             case "A":
@@ -117,15 +118,11 @@ public class Home {
                 brandLanding(bid);
                 break;
             case "C":
-            	
-                statement = conn.prepareStatement("SELECT c.cid from Customer c, U_Admin u where u.userid = c.userid and u.username = ? and u.userpwd = ?");
+                statement = conn.prepareStatement("SELECT CID from CUSTOMER where userid = (Select userid from U_ADMIN where USERNAME = ?)");
                 statement.setString(1, usr);
-                statement.setString(2, pass);
                 ResultSet rs2 = statement.executeQuery();
                 rs2.next();
-                System.out.println(rs2);
                 int custid = rs2.getInt("cid");
-                
                 customerLanding(custid);
                 break;
             }
