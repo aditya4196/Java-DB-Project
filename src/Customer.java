@@ -91,6 +91,7 @@ public class Customer extends Throwable {
 		statement2.executeQuery();
 		
 		System.out.println("Customer is enrolled in the Loyalty Program");
+		//home.customerLanding(custid);
 		
 	  }
 	  catch(Exception e) {
@@ -260,7 +261,7 @@ public class Customer extends Throwable {
 
 	}
 
-	public void earnPoints(int custid,int lpid, String acttype) throws Exception {
+	public void earnPoints(int custid, int lpid, String acttype) throws Exception {
 
 		DBConnector db = new DBConnector();
         Connection con = db.getConnection();
@@ -286,7 +287,7 @@ public class Customer extends Throwable {
 		int custpoints = rs2.getInt("points");
 		int cust_tier = rs2.getInt("tier");
 		
-		statement1 = conn.prepareStatement("SELECT lp_type from LOYALTYPROGRAM where lpid = ?");
+		statement1 = conn.prepareStatement("SELECT lptype from LOYALTYPROGRAM where lpid = ?");
 		statement1.setInt(1, lpid);
 		ResultSet rs3 = statement1.executeQuery();
 		rs3.next();
@@ -294,7 +295,7 @@ public class Customer extends Throwable {
 		int multiplier = 1;
 		int totalpts = 0;
 		int new_cust_tier = cust_tier;
-		String lp_type = rs3.getString("lp_type");
+		String lp_type = rs3.getString("lptype");
 		
 		if (lp_type == "tiered") {
 			statement1 = conn.prepareStatement("SELECT multiplier from BRAND_TIER where lpid = ? and tier_num = ?");
@@ -324,7 +325,7 @@ public class Customer extends Throwable {
 
 		totalpts = custpoints + (points * multiplier);
 
-		statement1 = conn.prepareStatement("UPDATE WALLET set points = ?, cust_tier = ? where cid = ? and lpid = ?");
+		statement1 = conn.prepareStatement("UPDATE WALLET set points = ?, tier = ? where cid = ? and lpid = ?");
 		statement1.setInt(1, totalpts);
 		statement1.setInt(2, new_cust_tier);
 		statement1.setInt(3, custid);
@@ -335,7 +336,7 @@ public class Customer extends Throwable {
 		
 
 		System.out.println("You have earned " + points + " points");
-		
+		home.customerLanding(custid);
 
 	}
 	
@@ -344,8 +345,8 @@ public class Customer extends Throwable {
 		DBConnector db = new DBConnector();
         Connection con = db.getConnection();
         Scanner op1 = new Scanner(System.in);
-        
-        PreparedStatement statement = con.prepareStatement("Select t.rrpoints, t.rew_count from rrrules t, rewardtype rt where t.lpid = ? and rt.rewname = ?");
+        System.out.println(rewtype);
+        PreparedStatement statement = con.prepareStatement("Select t.rrpoints, t.rew_count from rrrules t where t.lpid = ? and t.rewname = ?");
 		statement.setInt(1, lpid);
 		statement.setString(2, rewtype);
 		
@@ -367,6 +368,7 @@ public class Customer extends Throwable {
 		int customerGCCount = rs2.getInt("num_cust_gc");
 		int customerFPCount = rs2.getInt("num_cust_fp");
 		int totalpoints = 0;
+		int spentPoints = 0;
 		
 		if(rewtype.equalsIgnoreCase("GiftCard")) {
 			int giftCardCount = 0;
@@ -377,7 +379,8 @@ public class Customer extends Throwable {
 				System.out.print("How many do you want: ");
 				giftCardCount = op.nextInt();
 				if (giftCardCount <= brandRewCount && custpoints >= rewardPoints * giftCardCount) {
-					totalpoints = custpoints - (rewardPoints * giftCardCount);
+					spentPoints = rewardPoints * giftCardCount;
+					totalpoints = custpoints - spentPoints;
 					customerGCCount += giftCardCount;
 					brandRewCount -= giftCardCount;
 					break;
@@ -396,7 +399,8 @@ public class Customer extends Throwable {
 				System.out.print("How many do you want: ");
 				freeProductCount = op.nextInt();
 				if (freeProductCount <= brandRewCount && custpoints >= rewardPoints * freeProductCount) {
-					totalpoints = custpoints - (rewardPoints * freeProductCount);
+					spentPoints = rewardPoints * freeProductCount;
+					totalpoints = custpoints - spentPoints;
 					customerFPCount += freeProductCount;
 					brandRewCount -= freeProductCount;
 					break;
@@ -427,8 +431,8 @@ public class Customer extends Throwable {
 
 		statement1.executeUpdate();
 
-		System.out.println("You have spent " + totalpoints + " points");
-		
+		System.out.println("You have spent " + spentPoints + " points");
+		home.customerLanding(custid);
 
 	}
 	
