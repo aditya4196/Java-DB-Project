@@ -219,9 +219,9 @@ public class Queries {
         
         try 
         {
-            statement = conn.prepareStatement("SELECT ACTID, COUNT(*) as count from ActivityInstance where"
-            		+ "LPID in (Select distinct LPID from WALLET where BID = '31')"
-            		+ "and ACTID in (Select ACTID from RERULES where BID = '31')n"
+            statement = conn.prepareStatement("SELECT ACTID, COUNT(*) as count from ActivityInstance where "
+            		+ "LPID in (Select distinct LPID from WALLET where BID = '31') "
+            		+ "and ACTID in (Select ACTID from RERULES where BID = '31') "
             		+ "group by ACTID");
             
             ResultSet rs = statement.executeQuery();
@@ -245,7 +245,8 @@ public class Queries {
         } 
         
         catch (Exception e) {
-            System.out.println("Customer ID not found");
+            //System.out.println("Customer ID not found");
+        	e.printStackTrace();
             Queries.showQueries();
         }
 
@@ -333,13 +334,11 @@ public class Queries {
         
         try 
         {
-            statement = conn.prepareStatement("SELECT count(*) as count from ACTIVITYINSTANCE where CID ='1' and BID = '32' and"
+            statement = conn.prepareStatement("SELECT count(*) as count from ACTIVITYINSTANCE where CID ='1' and BID = '32' and "
             		+ "EARN_DATE>'01-AUG-21' and EARN_DATE<'30-SEP-21'");
             
             
-            System.out.println("Hello");
             ResultSet rs = statement.executeQuery();
-            System.out.println("Hello");
             ResultSetMetaData rsmd = rs.getMetaData();
             
             int columnsNumber = rsmd.getColumnCount();
